@@ -7,18 +7,7 @@ ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
 endif
 
-
-#---------------------------------------------------------------------------------
-#  TITLE, APPID, CONTENTID, ICON0 SFOXML before ppu_rules.
-#---------------------------------------------------------------------------------
-TITLE		:=	PS3 BDFFNTS
-APPID		:=	PS3BDFFNT1
-CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
-
 include $(PSL1GHT)/ppu_rules
-
-# aditional scetool flags (--self-ctrl-flags, --self-cap-flags...)
-SCETOOL_FLAGS	+=	
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -33,23 +22,23 @@ DATA		:=	data
 SHADERS		:=	shaders
 INCLUDES	:=	include
 
-
-#---------------------------------------------------------------------------------
-# any extra libraries we wish to link with the project
-#---------------------------------------------------------------------------------
-LIBS		:=	-lsimdmath -lrsx -lgcm_sys -lio -lsysutil -lrt -llv2 -lm
-
+TITLE		:=	RSX Test BDF FNT
+APPID		:=	PS3BDFFNT
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS		=	-O2 -Wall -mcpu=cell $(MACHDEP) $(INCLUDE) \
-			
+CFLAGS		=	-Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS		=	$(MACHDEP) -Wl,-Map,$(notdir $@).map
 
+#---------------------------------------------------------------------------------
+# any extra libraries we wish to link with the project
+#---------------------------------------------------------------------------------
+LIBS	:=	-lbdffnt -lsimdmath -lrsx -lgcm_sys -lio -lsysutil -lrt -llv2 -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -81,7 +70,7 @@ CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 VCGFILES	:=	$(foreach dir,$(SHADERS),$(notdir $(wildcard $(dir)/*.vcg)))
 FCGFILES	:=	$(foreach dir,$(SHADERS),$(notdir $(wildcard $(dir)/*.fcg)))
 
@@ -109,64 +98,42 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 export INCLUDE	:=	$(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					$(LIBPSL1GHT_INC) \
-					-I$(CURDIR)/$(BUILD) -I$(PORTLIBS)/include
+					-I$(CURDIR)/$(BUILD)
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					$(LIBPSL1GHT_LIB) -L$(PORTLIBS)/lib -L$(BUILDDIR)
+					$(LIBPSL1GHT_LIB) -L$(BUILDDIR)
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
 
-
 #---------------------------------------------------------------------------------
 $(BUILD):
-	[ -d $@ ] || mkdir -p $@
-	$(MAKE) -C $(BUILD) -f $(CURDIR)/Makefile
+	@make -C libbdffnt
+	@if [ ! -d "$(BUILDDIR)" ]; then mkdir $(BUILDDIR); fi
+	@mv libbdffnt/libbdffnt.a $(BUILDDIR)
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(CURDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID)
+	$(PKG) --contentid $(CONTENTID) $(CURDIR)/pkg/
+	@mv $(CONTENTID).pkg $(basename $(notdir $(OUTPUT))).gnpdrm.pkg
+	$(PACKAGE_FINALIZE) $(basename $(notdir $(OUTPUT))).gnpdrm.pkg
+	@echo Install $(basename $(notdir $(OUTPUT))).gnpdrm.pkg package to try the sample.
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self  $(OUTPUT).fake.self EBOOT.BIN
+	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(basename $(notdir $(OUTPUT))).gnpdrm.pkg $(OUTPUT).fake.self $(CURDIR)/pkg/USRDIR/EBOOT.BIN
 	make -C libbdffnt clean
-	make -C sample clean
 
 #---------------------------------------------------------------------------------
-run:
-	ps3load $(OUTPUT).self
+npdrm:
+	@echo npdrm ...
+	$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(CURDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID)
 
 #---------------------------------------------------------------------------------
-pkg:	$(BUILD)
-	@$(SELF_NPDRM) $(SCETOOL_FLAGS) --np-content-id=$(CONTENTID) --encrypt $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../pkg/USRDIR/EBOOT.BIN
-	$(VERB) echo building pkg ...
-	$(VERB) $(PKG) --contentid $(CONTENTID) $(BUILDDIR)/../pkg/ $(TARGET).pkg
-
-#---------------------------------------------------------------------------------
-
-npdrm: $(BUILD)
-	@$(SELF_NPDRM) $(SCETOOL_FLAGS) --np-content-id=$(CONTENTID) --encrypt $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../EBOOT.BIN
-
-#---------------------------------------------------------------------------------
-
-install: lib
-	@echo Copying...
-	@cp $(BUILDDIR)/libbdffnt.a $(PORTLIBS)/lib
-	@cp include/bdffnt.h $(PORTLIBS)/include
-	@echo Done!
-	
-uninstall:
-	@echo Removing...
-	@rm -fr $(PORTLIBS)/lib/libbdffnt.a
-	@rm -fr $(PORTLIBS)/include/bdffnt.h
-	@echo Done!
-	
-lib:
-	@make -C libbdffnt
-	@if [ ! -d "$(BUILDDIR)" ]; then mkdir $(BUILDDIR); fi
-	@mv libbdffnt/libbdffnt.a $(BUILDDIR)
-
 else
 
 DEPENDS	:=	$(OFILES:.o=.d)
@@ -175,7 +142,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).self: $(OUTPUT).elf
-$(OUTPUT).elf: main.o
+$(OUTPUT).elf:	$(OFILES)
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
