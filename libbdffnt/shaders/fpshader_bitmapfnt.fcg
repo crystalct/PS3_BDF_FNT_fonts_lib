@@ -1,0 +1,14 @@
+void main(float4 color : COLOR,
+		  float2 texcoord : TEXCOORD0,
+		  
+		  uniform sampler2D texture,
+		  
+		  out float4 oColor : COLOR
+		 )
+{
+	oColor.rgb =  color.rgb * tex2D(texture,texcoord).xyz;
+	if (tex2D(texture,texcoord).x > 0.70)
+		oColor.a = 1.0;
+	else
+		oColor.a = tex2D(texture,texcoord).x * 2.0 / 3.0;
+}
