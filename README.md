@@ -3,7 +3,8 @@ A simple standard C library to use fonts in Glyph Bitmap Distribution Format (BD
 
 The Glyph Bitmap Distribution Format is an ancient file format by Adobe is a, for storing bitmap fonts.
 Loadable Font File (that isn't Windows Font File) is a simple binary font format used by [Rockbox](https://www.rockbox.org/). It is a fixed-size raster font format that supports unicode.
-Using this library you can load directly FNT files from memory or from file. If you want use BDF file format you have to convert it to FNT file format using a convertor from Rockbox: [convbdf.exe] (https://www.rockbox.org/wiki/pub/Main/RockboxFontConvertor/rockbox_font_convertor_v1.2.zip).
+Using this library you can load directly FNT files from memory or from file. If you want use BDF file format you have to convert it to FNT file format using a convertor from Rockbox: [convbdf.exe](https://www.rockbox.org/wiki/pub/Main/RockboxFontConvertor/rockbox_font_convertor_v1.2.zip).
+```
 Usage convbdf.exe: convbdf [options] [input-files]
                    convbdf [options] [-o output-file] [single-input-file]
 Options:
@@ -12,7 +13,7 @@ Options:
     -s N   Start output at character encodings >= N
     -l N   Limit output to character encodings <= N
     -n     Don't generate bitmaps as comments in .c file
-
+```
 
 Usage:
 
