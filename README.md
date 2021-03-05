@@ -1,5 +1,5 @@
 # PS3 BDF/FNT unicode fonts library
-A simple standard C library to use fonts in Glyph Bitmap Distribution Format (BDF) and Loadable Font File (FNT) formats, in any standard psl1ght RSX 3D project.
+A simple standard C library to use fonts in Glyph Bitmap Distribution Format (BDF) and Loadable Font File (FNT) formats, in any standard psl1ght RSX 3D project, but not Tiny3Ds.
 
 The Glyph Bitmap Distribution Format is an ancient file format by Adobe, for storing bitmap fonts.
 Loadable Font File (that isn't Windows Font File) is a simple binary font format used by [Rockbox](https://www.rockbox.org/). It is a fixed-size raster font format that supports unicode.
@@ -33,7 +33,7 @@ You can find many places where download BDF fonts, like:
 [Rockbox](https://github.com/mguentner/rockbox/tree/master/fonts), [Dr Markus Kuhn - X11 fonts](https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html), 
 [IBM fonts](https://github.com/farsil/ibmfonts), etc. etc.
 
-Thanks to Timothy Redaelli @drizzt for his FNT35 font [GaiaManager](https://github.com/drizzt/GaiaManager)
+Thanks to Timothy Redaelli aka @drizzt for his FNT35 font from [GaiaManager](https://github.com/drizzt/GaiaManager).
 
 ## Usage
 
