@@ -50,13 +50,18 @@ int addfnt_from_bitmap_array_fnt(fnt_class* fnt, u8* font, u8 first_char, u8 las
 void shutdown_fnt(fnt_class* fntc);
  ```
 
- ##Antialiasing level
+ ## Antialiasing level
+
  When you init/load a font, you can select 3 different levels of Antaliasing.
+ 
  Level 0 (No antialising):
+ 
  ![image1](level0.png?raw=true)
 
  Level 1:
+ 
  ![image1](level1.png?raw=true)
 
  Level 2:
+ 
  ![image2](level2.png?raw=true)
