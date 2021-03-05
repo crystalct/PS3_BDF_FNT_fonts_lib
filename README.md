@@ -30,13 +30,8 @@ Usage:
 
 You can find many places where download BDF fonts, like:
 
-[Rockbox](https://github.com/mguentner/rockbox/tree/master/fonts)
-
-[Dr Markus Kuhn - X11 fonts](https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html)
-
-[IBM fonts](https://github.com/farsil/ibmfonts)
-
-etc. etc.
+[Rockbox](https://github.com/mguentner/rockbox/tree/master/fonts), [Dr Markus Kuhn - X11 fonts](https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html), 
+[IBM fonts](https://github.com/farsil/ibmfonts), etc. etc.
 
 Thanks to Timothy Redaelli @drizzt for his FNT35 font [GaiaManager](https://github.com/drizzt/GaiaManager)
 
