@@ -83,4 +83,6 @@ void shutdown_fnt(fnt_class* fntc);
  
  ![image2](level2.png?raw=true)
 
- [sample](image.png?raw=true)
+ 
+ 
+ ![sample](image.png?raw=true)
