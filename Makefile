@@ -7,6 +7,14 @@ ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
 endif
 
+ICON0		:=	$(CURDIR)/pkg/ICON0.PNG
+SFOXML		:=	$(CURDIR)/sfo.xml
+
+SCETOOL_FLAGS	?=	--self-app-version=0001000000000000  --sce-type=SELF --compress-data=TRUE --self-add-shdrs=TRUE --skip-sections=FALSE --key-revision=1 \
+					--self-auth-id=1010000001000003 --self-vendor-id=01000002 --self-fw-version=0003004000000000 \
+					--self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 \
+					--self-cap-flags 00000000000000000000000000000000000000000000007B0000000100000000
+
 include $(PSL1GHT)/ppu_rules
 
 #---------------------------------------------------------------------------------
@@ -21,6 +29,7 @@ SOURCES		:=	source
 DATA		:=	data
 SHADERS		:=	shaders
 INCLUDES	:=	include
+PKGFILES	:=	$(CURDIR)/pkg
 
 TITLE		:=	RSX Test BDF FNT
 APPID		:=	PS3BDFFNT
@@ -110,22 +119,22 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
 
 #---------------------------------------------------------------------------------
-$(BUILD):
+$(BUILD): 
 	@make -C libbdffnt
 	@if [ ! -d "$(BUILDDIR)" ]; then mkdir $(BUILDDIR); fi
 	@mv libbdffnt/libbdffnt.a $(BUILDDIR)
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(CURDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID)
-	$(PKG) --contentid $(CONTENTID) $(CURDIR)/pkg/
-	@mv $(CONTENTID).pkg $(basename $(notdir $(OUTPUT))).gnpdrm.pkg
-	$(PACKAGE_FINALIZE) $(basename $(notdir $(OUTPUT))).gnpdrm.pkg
-	@echo Install $(basename $(notdir $(OUTPUT))).gnpdrm.pkg package to try the sample.
+	@echo
+	@echo make pkg and install $(basename $(notdir $(OUTPUT))).pkg package to try the sample.
+
+#---------------------------------------------------------------------------------
+pkg:	$(BUILD) $(OUTPUT).pkg
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(basename $(notdir $(OUTPUT))).gnpdrm.pkg $(OUTPUT).fake.self $(CURDIR)/pkg/USRDIR/EBOOT.BIN
+	@rm -fr $(BUILD) $(OUTPUT).* $(CURDIR)/pkg/USRDIR/EBOOT.BIN
 	make -C libbdffnt clean
 
 #---------------------------------------------------------------------------------

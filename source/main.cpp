@@ -543,7 +543,7 @@ int main(int argc,const char *argv[])
 	P = transpose(Matrix4::perspective(DEGTORAD(45.0f),aspect_ratio,1.0f,3000.0f));
 
 	fnt_class alpha;
-	init_fnt(gGcmContext, display_width, display_height, NULL, 32, 2, &alpha);  //INIT font using dfeault font from memory: font35 46x35
+	init_fnt(gGcmContext, display_width, display_height, NULL, 32, 0, &alpha);  //INIT font using dfeault font from memory: font35 46x35
 
 	printf("Valore maxwidth: %d height: %d size: %d firstchar: %d defaultchar: %d nbits %d noffset: %d nwidth %d long_offset: %d pad: %d\n",
 		alpha.fnt[alpha.current_font].maxwidth, alpha.fnt[alpha.current_font].height, alpha.fnt[alpha.current_font].size, alpha.fnt[alpha.current_font].firstchar,
@@ -558,8 +558,8 @@ int main(int argc,const char *argv[])
 			alpha.fnt[alpha.current_font].defaultchar, alpha.fnt[alpha.current_font].nbits, alpha.fnt[alpha.current_font].noffset,
 			alpha.fnt[alpha.current_font].nwidth, alpha.fnt[alpha.current_font].long_offset, alpha.fnt[alpha.current_font].pad);
 	}
-
-	ret = addfnt_from_file_fnt(&alpha, "/dev_hdd0/game/PS3BDFFNT/USRDIR/b24.fnt", 0); //24x24
+	
+	ret = addfnt_from_file_fnt(&alpha, "/dev_hdd0/game/PS3BDFFNT/USRDIR/b24.fnt", 2); //24x24
 	if (!ret) {
 		SetCurrentFont_fnt(&alpha, 2);
 		printf("Valore maxwidth: %d height: %d size: %d firstchar: %d defaultchar: %d nbits %d noffset: %d nwidth %d long_offset: %d pad: %d\n",
@@ -567,6 +567,16 @@ int main(int argc,const char *argv[])
 			alpha.fnt[alpha.current_font].defaultchar, alpha.fnt[alpha.current_font].nbits, alpha.fnt[alpha.current_font].noffset, 
 			alpha.fnt[alpha.current_font].nwidth, alpha.fnt[alpha.current_font].long_offset, alpha.fnt[alpha.current_font].pad);
 	}
+
+	ret = addfnt_from_file_fnt(&alpha, "/dev_hdd0/game/PS3BDFFNT/USRDIR/ncenBI18.fnt", 2); //24x24
+	if (!ret) {
+		SetCurrentFont_fnt(&alpha, 4);
+		printf("Valore maxwidth: %d height: %d size: %d firstchar: %d defaultchar: %d nbits %d noffset: %d nwidth %d long_offset: %d pad: %d\n",
+			alpha.fnt[alpha.current_font].maxwidth, alpha.fnt[alpha.current_font].height, alpha.fnt[alpha.current_font].size, alpha.fnt[alpha.current_font].firstchar,
+			alpha.fnt[alpha.current_font].defaultchar, alpha.fnt[alpha.current_font].nbits, alpha.fnt[alpha.current_font].noffset,
+			alpha.fnt[alpha.current_font].nwidth, alpha.fnt[alpha.current_font].long_offset, alpha.fnt[alpha.current_font].pad);
+	}
+
 	addfnt_from_bitmap_array_fnt(&alpha, font, 32, 255, 16, 32, 2, BIT0_FIRST_PIXEL, 2);  //16x32
 	addfnt_from_bitmap_array_fnt(&alpha, (u8*)data_font_Adonais, 0x20, 0x7e, 32, 31, 1, BIT7_FIRST_PIXEL, 2);  //32x31
 
@@ -587,32 +597,56 @@ int main(int argc,const char *argv[])
         drawFrame();
 
 		SetCurrentFont_fnt(&alpha, 0);
-		setPosition_fnt(&alpha, 46, 35);
+		setPosition_fnt(&alpha, 10, 10);
 		setDimension_fnt(&alpha, 46, 35);
 		setColor_fnt(&alpha, 0.0f, 0.5647f, 1.0f, 1.0f);
 		//print_fnt(&alpha, "A");
-		printf_fnt(&alpha, "Gerpijqy成成PA成 mangia pane a ! tradimento: %d", 10);
+		printf_fnt(&alpha, "Default Font: fnt35 (46x35) abcd.. ABCD... 0123456789");
+		setPosition_fnt(&alpha, 10, 10 + 40);
+		printf_fnt(&alpha, "Unicode: true. àèìòù ∮n → ∞, ∑ かがきぎくぐけ");
 		
 		SetCurrentFont_fnt(&alpha, 1);
-		setPosition_fnt(&alpha, 46, 110);
-		setDimension_fnt(&alpha, 24, 48);
-		print_fnt(&alpha, "Hello World!");
+		setPosition_fnt(&alpha, 10, 10 + 80);
+		setDimension_fnt(&alpha, 12, 24);
+		setColor_fnt(&alpha, 1.0f, 0.5647f, 0.0f, 1.0f);
+		print_fnt(&alpha, "Loaded font: 12x24a.fnt (12x24) abcd.. ABCD... 0123456789");
+		setPosition_fnt(&alpha, 10, 10 + 110);
+		printf_fnt(&alpha, "Unicode: partial. àèìòù []{}ç@£$%&");
 
 		SetCurrentFont_fnt(&alpha, 2);
-		setPosition_fnt(&alpha, 46, 80);
+		setPosition_fnt(&alpha, 10, 10 + 140);
+		setColor_fnt(&alpha, 0.0f, 0.5647f, 1.0f, 1.0f);
 		setDimension_fnt(&alpha, 24, 24);
-		
-		printf_fnt(&alpha, "Gerpijqy成成PA成 mangia pane a ! tradimento: %d", 10);
+		printf_fnt(&alpha, "Loaded font: b24.fnt (24x24) abcd.. ABCD... 0123456789");
+		setPosition_fnt(&alpha, 10, 10 + 170);
+		printf_fnt(&alpha, "Unicode: true. àèìòù ∮n → ∞, ∑ かがきぎくぐけ");
 
 		SetCurrentFont_fnt(&alpha, 3);
-		setPosition_fnt(&alpha, 46, 200);
-		setDimension_fnt(&alpha, 24, 48);
-		print_fnt(&alpha, "abcdefgh ABCDFG wxyz WXYZ @ $%&/()=?^");
-
+		setPosition_fnt(&alpha, 10, 10 + 200);
+		setColor_fnt(&alpha, 1.0f, 0.5647f, 0.0f, 1.0f);
+		setDimension_fnt(&alpha, 39, 26);
+		printf_fnt(&alpha, "Loaded font: ncenBI18.fnt (39x26) abcd.. ABCD... 0123456789");
+		setPosition_fnt(&alpha, 10, 10 + 230);
+		printf_fnt(&alpha, "Unicode: partial. àèìòù []{}ç@£$%&");
+		
 		SetCurrentFont_fnt(&alpha, 4);
-		setPosition_fnt(&alpha, 46, 240);
+		setPosition_fnt(&alpha, 10, 300);
+		setDimension_fnt(&alpha, 16, 32);
+		setColor_fnt(&alpha, 0.3f, 0.5647f, 1.0f, 1.0f);
+		print_fnt(&alpha, "Loaded generic bytearray font (16x32) abcd.. ABCD... 0123456789");
+		setPosition_fnt(&alpha, 10, 340);
+		printf_fnt(&alpha, "Unicode: No.");
+
+		SetCurrentFont_fnt(&alpha, 5);
+		setPosition_fnt(&alpha, 10, 420);
+		setColor_fnt(&alpha, 1.0f, 0.5647f, 0.3f, 1.0f);
 		setDimension_fnt(&alpha, 32, 31);
-		print_fnt(&alpha, "WX  abcdefgh ABCDFG wxyz WXYZ @ $%&/()=?^");
+		print_fnt(&alpha, "Loaded Adonais font: (32x31) abcd..");
+		setPosition_fnt(&alpha, 10, 460);
+		printf_fnt(&alpha, "ABCD... 0123456789.");
+		setPosition_fnt(&alpha, 10, 500);
+		printf_fnt(&alpha, "Unicode: No.");
+
         flip();
     }
 
