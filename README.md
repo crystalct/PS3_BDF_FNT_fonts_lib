@@ -58,6 +58,12 @@ void print_fnt(fnt_class* fnt, const char* pszText);
 void printf_fnt(fnt_class* fnt, const char* pszText, ...);
 int addfnt_from_file_fnt(fnt_class* fnt, const char* pszText, u8 aa_level);
 int addfnt_from_bitmap_array_fnt(fnt_class* fnt, u8* font, u8 first_char, u8 last_char, int w, int h, int bits_per_pixel, int byte_order, u8 aa_level);
+int SetCurrentFont_fnt(fnt_class* fnt, u8 i);
+setPosition_fnt(fnt_class* fntc, s32 x, s32 y);
+setColor_fnt(fnt_class* fntc, f32 r, f32 g, f32 b, f32 a);
+setSafeArea_fnt(fnt_class* fntc, s32 left, s32 right, s32 top, s32 bottom);
+getSafeArea_fnt(fnt_class* fntc, s32* pLeft, s32* pRight, s32* pTop, s32* pBottom);
+setDimension_fnt(fnt_class* fntc, u32 w, u32 h)
 void shutdown_fnt(fnt_class* fntc);
  ```
 
