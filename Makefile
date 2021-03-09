@@ -138,6 +138,25 @@ clean:
 	make -C libbdffnt clean
 
 #---------------------------------------------------------------------------------
+lib:
+	@echo making lib...
+	@make -C libbdffnt
+
+#---------------------------------------------------------------------------------
+install: lib
+	@echo Copying...
+	@cp libbdffnt/libbdffnt.a $(PORTLIBS)/lib
+	@cp include/bdffnt.h $(PORTLIBS)/include
+	@echo Done!
+	
+#---------------------------------------------------------------------------------
+uninstall:
+	@echo Removing...
+	@rm -fr $(PORTLIBS)/lib/libbdffnt.a
+	@rm -fr $(PORTLIBS)/include//bdffnt.h
+	@echo Done!
+
+#---------------------------------------------------------------------------------
 npdrm:
 	@echo npdrm ...
 	$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(CURDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID)
